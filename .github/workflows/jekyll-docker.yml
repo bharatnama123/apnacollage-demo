@@ -1,0 +1,20 @@
+name: bharat site CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the site in the bharat/builder container
+      run: |
+        docker run \
+        -v ${{ github.workspace }}:/srv/bharat -v ${{ github.workspace }}/_site:/srv/bharat/_site \
+        bharat/builder:latest /bin/bash -c "chmod -R 777 /srv/bharat && bharat build --future"
